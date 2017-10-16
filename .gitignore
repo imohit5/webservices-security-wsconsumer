@@ -5,3 +5,4 @@
 .gitattributes
 bin/
 target/
+src/main/resources/Keystore

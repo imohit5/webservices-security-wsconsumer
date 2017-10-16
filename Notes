@@ -1,0 +1,11 @@
+#Steps to generate keys
+keytool -genkey -keyalg RSA -sigalg SHA1withRSA -validity 600 -alias wsproducerkey -keypass skpass -storepass sspass -keystore producerKeystore.jks -dname "cn=SecurityTest"
+keytool -genkey -keyalg RSA -sigalg SHA1withRSA -validity 600 -alias wsconsumerkey  -keypass ckpass -storepass cspass -keystore consumerKeystore.jks -dname "cn=SecurityTest"
+
+
+keytool -export -rfc -keystore producerKeystore.jks -storepass sspass -alias wsproducerkey -file ServiceCert.cer
+keytool -export -rfc -keystore consumerKeystore.jks -storepass cspass -alias wsconsumerkey -file ClientCert.cer
+
+
+keytool -import -trustcacerts -keystore producerKeystore.jks -storepass sspass -alias wsconsumerkey -file ClientCert.cer -noprompt
+keytool -import -trustcacerts -keystore consumerKeystore.jks -storepass cspass -alias wsproducerkey -file ServiceCert.cer -noprompt

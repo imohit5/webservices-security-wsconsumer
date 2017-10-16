@@ -16,6 +16,7 @@ public class ConsumerPasswordCallback implements CallbackHandler {
 
 	public ConsumerPasswordCallback() {
 		credentials.put("admin", "password");
+		credentials.put("wsconsumerkey", "ckpass");
 	}
 
 	@Override
