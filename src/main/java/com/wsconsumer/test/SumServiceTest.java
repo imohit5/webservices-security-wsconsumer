@@ -35,7 +35,7 @@ public class SumServiceTest {
 			Endpoint endpoint = client.getEndpoint();
 			
 			HashMap<String, Object> outDetails = new HashMap<>();
-			outDetails.put(WSHandlerConstants.ACTION, "UsernameToken Encrypt");
+			outDetails.put(WSHandlerConstants.ACTION, "UsernameToken Timestamp Signature Encrypt");
 			outDetails.put(WSHandlerConstants.USER, "admin");
 			outDetails.put(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PW_TEXT);
 			outDetails.put(WSHandlerConstants.PW_CALLBACK_CLASS, ConsumerPasswordCallback.class.getName());
@@ -43,16 +43,27 @@ public class SumServiceTest {
 			outDetails.put(WSHandlerConstants.ENCRYPTION_USER, "wsproducerkey");
 			outDetails.put(WSHandlerConstants.ENC_PROP_FILE, "props/consumerKeystore.properties");
 			
+			outDetails.put(WSHandlerConstants.ENCRYPTION_PARTS, "{Element}{http://www.w3.org/2000/09/xmldsig#}Signature;{Content}{http://schemas.xmlsoap.org/soap/envelope/}Body");
+			
+			outDetails.put(WSHandlerConstants.SIGNATURE_USER, "wsconsumerkey");
+			outDetails.put(WSHandlerConstants.SIG_PROP_FILE, "props/consumerKeystore.properties");
+			
+			outDetails.put(WSHandlerConstants.SIGNATURE_PARTS, "{Element}{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd}Timestamp;{Element}{http://schemas.xmlsoap.org/soap/envelope/}Body");
+			
+			outDetails.put("timeToLive", "30");
+			
 			WSS4JOutInterceptor wss4jOutInterceptor = new WSS4JOutInterceptor(outDetails);
 			
 			endpoint.getOutInterceptors().add(wss4jOutInterceptor);
 			
 			
 			Map<String, Object> inDetails = new HashMap<>();
-			inDetails.put(WSHandlerConstants.ACTION, "Encrypt");
+			inDetails.put(WSHandlerConstants.ACTION, "Signature Encrypt Timestamp");
 			inDetails.put(WSHandlerConstants.PW_CALLBACK_CLASS, ConsumerPasswordCallback.class.getName());
 			
 			inDetails.put(WSHandlerConstants.DEC_PROP_FILE, "props/consumerKeystore.properties");
+			
+			inDetails.put(WSHandlerConstants.SIG_PROP_FILE, "props/consumerKeystore.properties");
 			
 			WSS4JInInterceptor wss4jInInterceptor = new WSS4JInInterceptor(inDetails);
 			
